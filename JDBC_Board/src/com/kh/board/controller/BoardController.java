@@ -2,6 +2,7 @@ package com.kh.board.controller;
 
 import java.util.List;
 
+import com.kh.board.model.service.BoardService;
 import com.kh.board.model.service.BoardServiceImpl;
 import com.kh.board.model.vo.Board;
 import com.kh.board.view.BoardView;
@@ -12,23 +13,20 @@ import com.kh.board.view.BoardView;
 public class BoardController {
 	
 	// service 변수 선언 및 초기화
-	private BoardServiceImpl bService = new BoardServiceImpl();
+	private BoardService bService = new BoardServiceImpl();
 	
 	// view의 login요청을 담당할 메서드
-	public int login(String id, String pwd) {
-		int login = bService.login(id, pwd);
-		return login;
+	public boolean login(String id, String pwd) {
+		int result = bService.login(id, pwd);
+		if(result > 0) {
+			return true;
+		}
+		return false;
 	}
 	// view의 selectBoardList요청을 담당할 메서드
 
-	public void selectBoardList() {
-		List<Board> list = bService.selectBoardList();
-		
-		if(list.isEmpty()) {
-			new BoardView().displayNodata("보드에 작성된 결과가 없습니다.");
-		}else {
-			new BoardView().displayList(list);
-		}
+	public List<Board> selectBoardList() {
+		return bService.selectBoardList();
 		
 	}
 
@@ -36,17 +34,15 @@ public class BoardController {
 	// view의 selectBoard요청을 담당할 메서드
 	
 	// view의 insertBoard요청을 담당할 메서드
-	public void insertBoard(String memberId, String title, String content) {
-		Board b =
-				new Board(1, title, content, null, memberId, "N");
+	public int insertBoard(String memberId, String title, String content) {
+		Board b =new Board();
+		b.setTitle(title);
+		b.setContent(content);
+		b.setWriter(memberId);
 		
 		int result = bService.insertBoard(b);
 		
-		if(result > 0) {
-			new BoardView().displaySuccess("보드 추가 성공");
-		}else {
-			new BoardView().displayFail("보드 추가 실패");
-		}
+		return result;
 		
 	}
 	

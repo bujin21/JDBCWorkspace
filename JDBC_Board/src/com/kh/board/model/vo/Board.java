@@ -9,22 +9,22 @@ public class Board {
 	private int bNo;
 	private  String title;
 	private String content;
-	private Date create_date;
+	private Date createDate;
 	private String writer;
-	private String delete_yn;
+	private String deleteYn;
 	
 	public Board() {
 		
 	}
 
-	public Board(int bNo, String title, String content, Date create_date, String writer, String delete_yn) {
+	public Board(int bNo, String title, String content, Date createDate, String writer, String deleteYn) {
 		super();
 		this.bNo = bNo;
 		this.title = title;
 		this.content = content;
-		this.create_date = create_date;
+		this.createDate = createDate;
 		this.writer = writer;
-		this.delete_yn = delete_yn;
+		this.deleteYn = deleteYn;
 	}
 
 	public int getbNo() {
@@ -51,12 +51,12 @@ public class Board {
 		this.content = content;
 	}
 
-	public Date getCreate_date() {
-		return create_date;
+	public Date getCreateDate() {
+		return createDate;
 	}
 
-	public void setCreate_date(Date create_date) {
-		this.create_date = create_date;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 	public String getWriter() {
@@ -67,18 +67,18 @@ public class Board {
 		this.writer = writer;
 	}
 
-	public String getDelete_yn() {
-		return delete_yn;
+	public String getDeleteYn() {
+		return deleteYn;
 	}
 
-	public void setDelete_yn(String delete_yn) {
-		this.delete_yn = delete_yn;
+	public void setDeleteYn(String deleteYn) {
+		this.deleteYn = deleteYn;
 	}
 
 	@Override
 	public String toString() {
-		return "Board [bNo=" + bNo + ", title=" + title + ", content=" + content + ", create_date=" + create_date
-				+ ", writer=" + writer + ", delete_yn=" + delete_yn + "]";
+		return "Board [bNo=" + bNo + ", title=" + title + ", content=" + content + ", create_date=" + createDate
+				+ ", writer=" + writer + ", delete_yn=" + deleteYn + "]";
 	}
 	
 	

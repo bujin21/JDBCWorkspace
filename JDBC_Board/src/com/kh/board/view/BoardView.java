@@ -28,8 +28,8 @@ public class BoardView {
 			System.out.print("PWD : ");
 			String pwd = sc.nextLine();
 			
-			int login = bc.login(id, pwd);
-			if(login > 0) {
+			boolean result = bc.login(id, pwd);
+			if(result) {
 				memberId = id;
 				mainMenu();
 				break;
@@ -55,31 +55,20 @@ public class BoardView {
 			System.out.println("4. 게시판 수정하기");
 			System.out.println("5. 게시판 삭제하기");			
 			System.out.println("9. 끝");
-			System.out.println("메뉴 : ");
+			System.out.print("메뉴 : ");
 			int menu = sc.nextInt();
-
+			sc.nextLine();
 			
 			switch(menu) {
-			case 1:
-				selectBoardList();
-				break;
-			case 2:
-				selectBoard();
-				break;
-			case 3:
-				insertBoard();
-				break;
-			case 4:
-				updateBoard();
-				break;
-			case 5:
-				deleteBoard();
-				break;
-			case 9:
+			case 1 -> selectBoardList();
+			case 2 -> selectBoard();
+			case 3 -> insertBoard();
+			case 4 -> updateBoard();
+			case 5 -> deleteBoard();
+			case 9 -> {
 				System.out.println("종료합니다.");
 				return;
-			default :
-				System.out.println("다시 입력해주세요.");
+				}
 			}
 		}
 	}
@@ -90,7 +79,11 @@ public class BoardView {
 	 * */
 	public void selectBoardList() {
 		System.out.println("게시글 번호\t게시글 제목\t작성자\t작성시간");
-		bc.selectBoardList();
+		List<Board> list = bc.selectBoardList();
+		for(Board b : list) {
+			System.out.printf("%d\t%s\t%s\t%s", 
+							b.getbNo(),b.getTitle(), b.getContent(),b.getWriter(), b.getCreateDate());
+		}
 	}
 	
 	/** 
@@ -111,12 +104,17 @@ public class BoardView {
 	 * 사용자로 하여금 게시글 제목과, 내용을 입력받아 게시글을 등록요청을 보내는 메소드
 	 * */
 	public void insertBoard() {
-		System.out.println("게시글 제목 : ");
-		String title = sc.next();
-		System.out.println("게시글 내용 : ");
-		String content = sc.next();
+		System.out.print("게시글 제목 : ");
+		String title = sc.nextLine();
+		System.out.print("게시글 내용 : ");
+		String content = sc.nextLine();
 		
-		bc.insertBoard(memberId, title, content);
+		int result =bc.insertBoard(memberId, title, content);
+		if(result > 0) {
+			System.out.println("게시글 등록 성공");
+		}else {
+			System.out.println("게시글 등록 실패");
+		}
 	}
 	
 	/** 
@@ -148,15 +146,6 @@ public class BoardView {
 		
 	}
 
-	public void displaySuccess(String string) {
-		System.out.println(string);
-		
-	}
-
-	public void displayFail(String string) {
-		System.out.println(string);
-		
-	}
 	
 	
 	

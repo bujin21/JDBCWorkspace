@@ -11,7 +11,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
-import com.kh.board.model.template.JDBCTemplate;
+import static com.kh.board.model.template.JDBCTemplate.*;
 import com.kh.board.model.vo.Board;
 import com.kh.board.model.vo.Member;
 
@@ -34,8 +34,8 @@ public class BoardDao {
 		}
 		
 	}
-	public Member login(Connection conn, String memberId, String memberPwd) {
-		Member m = null;
+	public int login(Connection conn, String memberId, String memberPwd) {
+		int result = 0;
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		String sql = prop.getProperty("login");
@@ -47,21 +47,17 @@ public class BoardDao {
 			rset = pstmt.executeQuery();
 			
 			if(rset.next()) {
-				m = new Member();
-				m.setMemberId(rset.getString("MEMBER_ID"));
-				m.setMemberName(rset.getString("MEMBER_PWD"));
-				m.setPhone(rset.getString("PHONE"));
-				m.setAge(rset.getInt("AGE"));
-				m.setEnrollDate(rset.getDate("ENROLL_DATE"));
+				result = rset.getInt(1);
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
+			close(rset);
+			close(pstmt);
 		}
 		
-		return m;
+		return result;
 	}
 	
 	public int insertBoard(Connection conn, Board b) {
@@ -71,26 +67,42 @@ public class BoardDao {
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, b.getbNo());
-			pstmt.setString(2, b.getTitle());
-			pstmt.setString(3, b.getContent());
-			pstmt.setString(4, b.getWriter());
-			pstmt.setString(5, b.getDelete_yn());
+			pstmt.setString(1, b.getTitle());
+			pstmt.setString(2, b.getContent() );
+			pstmt.setString(3, b.getWriter() );
 			
 			result = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
-			JDBCTemplate.close(pstmt);
+			close(pstmt);
 		}
 		return result;
 	}
-	public int lastBoard(Connection conn) {
-		int result = 0;
+	public List<Board> selectBoardList(Connection conn) {
+		List<Board> list = null;
 		PreparedStatement pstmt = null;
-		String sql = prop.getProperty("lastBoarNum");
+		ResultSet rset = null;
+		String sql = prop.getProperty("selectBoardList");
 		
-		return 0;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				Board b = new Board();
+				b.setbNo(rset.getInt("BNO"));
+				b.setTitle(rset.getString("TITLE"));
+				b.setContent(rset.getString("CONTENT"));
+				b.setWriter(rset.getString("WRITER"));
+				b.setCreateDate(rset.getDate("CREATE_DATE"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return list;
 	}
 
 }

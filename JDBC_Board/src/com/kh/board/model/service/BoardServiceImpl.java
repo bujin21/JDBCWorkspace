@@ -6,6 +6,7 @@ import static com.kh.board.model.template.JDBCTemplate.getConnection;
 import java.sql.Connection;
 import java.util.List;
 
+import static com.kh.board.model.template.JDBCTemplate.*;
 import com.kh.board.model.dao.BoardDao;
 import com.kh.board.model.vo.Board;
 import com.kh.board.model.vo.Member;
@@ -14,32 +15,34 @@ import com.kh.board.model.vo.Member;
 public class BoardServiceImpl implements BoardService{
 	
 	private BoardDao bDao = new BoardDao();
+	
 	@Override
 	public int login(String memberId, String memberPwd) {
 		Connection conn = getConnection();
-		Member m = bDao.login(conn, memberId,memberPwd);
-		if(m != null) {
-			close(conn);
-			return 1;
-		}
+		int result = bDao.login(conn, memberId,memberPwd);
 		close(conn);
-		return 0;
+		return result;
 	}
 
 	@Override
 	public int insertBoard(Board b) {
-		int result = 0;
-		
 		Connection conn = getConnection();
-		result = bDao.insertBoard(conn, b);
+		int result = bDao.insertBoard(conn, b);
+		if(result > 0) {
+			commit(conn);
+		}else {
+			rollback(conn);
+		}
 		close(conn);
 		return result;
 	}
 
 	@Override
 	public List<Board> selectBoardList() {
-		// TODO Auto-generated method stub
-		return null;
+		Connection conn = getConnection();
+		List<Board> list = bDao.selectBoardList(conn);
+		close(conn);
+		return list;
 	}
 
 	@Override
